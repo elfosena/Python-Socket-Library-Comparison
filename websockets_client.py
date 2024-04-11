@@ -20,17 +20,18 @@ async def receive_file(websocket):
         except websockets.ConnectionClosedOK:
             break
     
-async def client():
+async def client(file_count):
     # Establish a WebSocket connection to the specified address
     async with websockets.connect('ws://localhost:8765') as websocket:
         # Call the send_file function to send the specified file
+        await websocket.send(str(file_count))
         await receive_file(websocket)
 
 start = datetime.datetime.now()
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 
-loop.run_until_complete(client())
+loop.run_until_complete(client(100))
 loop.close()
 
 end = datetime.datetime.now()

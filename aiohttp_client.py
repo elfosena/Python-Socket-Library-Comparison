@@ -11,9 +11,11 @@ PORT = int(os.getenv('PORT', 8080))
 URL = f'http://{HOST}:{PORT}/ws'
 
 
-async def main():
+async def client(file_count):
     session = aiohttp.ClientSession()
     async with session.ws_connect(URL) as ws:
+
+        await ws.send_str(str(file_count))
 
         async for msg in ws:
             data_received = msg.data
@@ -30,7 +32,7 @@ async def main():
 
 start = datetime.datetime.now()
 loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+loop.run_until_complete(client(100))
 end = datetime.datetime.now()
 
 print("Time elapsed:", str((end-start).microseconds))
